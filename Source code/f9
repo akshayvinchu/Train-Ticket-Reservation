@@ -1,0 +1,137 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.sql.*;
+import java.util.*;
+
+public class Passanger extends JFrame implements ActionListener  {
+	
+	 Connection cn;
+     PreparedStatement pstm,pst;
+     ResultSet rs;
+     JLabel l,l1,l2,l3,l4,im;
+     JTextField t1,t2,t3;
+     JTextArea ta;
+     JButton b1;
+     JComboBox<String> cb;  String m;
+     Font f;
+	 long ln;
+	 Image img;
+	 
+	 
+	Passanger(String title,String mail){
+		super(title);
+		setLayout(null);
+        setSize(1650,1080);
+        setLocation(0,0);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        try {
+        	cn=DriverManager.getConnection("jdbc:postgresql://127.0.0.1/mydb","akshay","akshay");
+        	pst=cn.prepareStatement("select * from signup where email=?");
+        	pstm=cn.prepareStatement("insert into passanger values(?,?,?,?,?,?,?,?,?,?,?)");
+        	
+        	
+        }
+        catch(SQLException e1) {
+        	System.out.println(e1);
+        	}
+        im=new JLabel("");
+        img=new ImageIcon(this.getClass().getResource("/tr.jpg")).getImage();
+        im.setIcon(new ImageIcon(img));
+        
+        l=new JLabel("Please complete your profile"); f=new Font("ARIAL",Font.BOLD,20);
+        l.setFont(f);
+        l1=new JLabel("Select the Id Type:-");
+        l2=new JLabel("Enter the Id number:-");
+        l3=new JLabel("Enter your Address:-");
+        
+         m=mail;
+        
+        t1=new JTextField(20);
+        
+        ta=new JTextArea(40,40);
+        
+        b1=new JButton("Submit");
+        
+        String idt[]= {"Adhar Card","Pan Card","Voter Id","Other"};
+         cb = new JComboBox<>(idt);
+         
+         b1.addActionListener(this);
+         
+         im.setBounds(0,-130,1640,1070);
+         l.setBounds(490,30,600,30);
+         l1.setBounds(575,80,200,30);
+         cb.setBounds(525,110,300,30);
+         l2.setBounds(525,160,200,30);
+         t1.setBounds(525,190,300,30);
+         l3.setBounds(525,240,200,30);
+         ta.setBounds(525,270,300,200);
+         b1.setBounds(625,510,100,30);
+         
+        add(l); add(l1); add(cb); add(l2); add(t1); add(l3); add(ta); add(b1); add(im);
+         
+        setVisible(true);
+	}
+	
+	
+
+	public void actionPerformed(ActionEvent ae) {
+		if(ae.getSource()==b1) {
+			try {
+				String s1,s2,s3,s4,s5,s6,s7,s8,s9;
+				
+				pst.setString(1,m);
+				rs=pst.executeQuery();
+				while(rs.next()) {
+					if(rs.getString(3).equals(m)) {
+						s1=rs.getString(1);
+						s2=rs.getString(2);
+						s3=rs.getString(3);
+						ln=rs.getLong(4);
+						s9=rs.getString(5);
+						s4=rs.getString(6);
+						s5=rs.getString(7);
+						
+						pstm.setString(1,s1);
+						pstm.setString(2,s2);
+						pstm.setString(3,s3);
+						pstm.setLong(4,ln);
+						pstm.setString(5,s9);
+						pstm.setString(6,s4);
+						pstm.setString(7,s5);
+						break;
+					}
+				}
+				
+				s6=cb.getSelectedItem().toString();
+				s7=t1.getText().toString();
+				s8=ta.getText().toString();
+				Random ran=new Random();
+				int no=ran.nextInt(99999);
+				
+				pstm.setString(8,s6);
+				pstm.setString(9,s7);
+				pstm.setString(10,s8);
+				pstm.setInt(11,no);
+				
+				int sub=pstm.executeUpdate();
+				if(sub>0) {
+					JOptionPane.showMessageDialog(this,"Profile Updated Successfully");
+				   Selection se=new Selection("Train Reservation",m);
+					se.setVisible(true);
+					this.dispose();
+				}
+			}
+			catch(SQLException e2) {
+				System.out.println(e2);
+			}
+		}
+		
+		
+	}
+	public static void main(String[] args) {
+		new Passanger("Train Reservation",null);
+	}
+
+}
+

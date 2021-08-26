@@ -1,0 +1,55 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+public class Home extends JFrame implements ActionListener{
+	  
+	  JLabel l1,im;
+      JButton b1,b2;
+      Image img;
+      String mail;
+	  Home(String tit,String mail){
+		super(tit);
+		setLayout(null);
+        setSize(700,550);
+        setLocation(320,120);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.mail=mail;
+        im=new JLabel("");
+        img=new ImageIcon(this.getClass().getResource("/bak.jpg")).getImage();
+        im.setIcon(new ImageIcon(img));
+        
+        b1=new JButton("Book Ticket"); b1.setForeground(Color.white); b1.setBackground(Color.DARK_GRAY);
+        b2=new JButton("Cancel Ticket"); b2.setForeground(Color.white); b2.setBackground(Color.DARK_GRAY);
+         
+       b1.setBounds(230,100,250,30); 
+       b2.setBounds(230,200,250,30); 
+       im.setBounds(0,0,700,550);
+       
+       b1.addActionListener(this);
+       b2.addActionListener(this);
+       add(b1); add(b2); //add(im);
+        
+        
+        setVisible(true);
+	}
+
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource()==b1) {
+			Selection se=new Selection("Train Reservation",mail);
+			 se.setVisible(true);
+				this.dispose();
+		}
+		if(e.getSource()==b2) {
+			Cancel ca=new Cancel("Cancel Ticket",mail);
+			ca.setVisible(true);
+			this.dispose();
+		}
+	}
+	public static void main(String[] arg) {
+		new Home("Train Reservation",null);
+	}
+	
+}
+

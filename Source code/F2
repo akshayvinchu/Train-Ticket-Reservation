@@ -1,0 +1,315 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.sql.*;
+
+
+
+public class Signup extends JFrame implements ActionListener{
+     Connection cn;
+     PreparedStatement pstm,pstm1,pstm2,pstm3;
+     Statement stmt;
+     ResultSet rs,rs1,rs2;
+     JLabel l1,l2,l3,l4,l5,l6,l7,l8,l9,l10,l11,l12,im;
+     JTextField t1,t2,t3,t4,t5,t6,t7,t8,t9;
+     JButton b1,b2,b3;
+     JPasswordField p1,p2,p3;
+     JRadioButton r1,r2;
+     JCheckBox c,c1;
+     Font f;
+     ButtonGroup bg;
+     long mob;
+     String s1,s2,s3,s4,s5,s6,s7,pas;
+     int up,cnt,cnt1;
+     Image img,img1;
+     ImageIcon in;
+     
+     
+     
+     Signup(String title){
+    	 
+        super(title);
+     
+        setLayout(null);
+        setSize(1650,1080);
+        setLocation(0,0);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        in=new ImageIcon("/si.png");
+        this.setIconImage(in.getImage());
+        
+        try {
+        	cn=DriverManager.getConnection("jdbc:postgresql://127.0.0.1/mydb","akshay","akshay");
+        	pstm=cn.prepareStatement("insert into signup values(?,?,?,?,?,?,?)");
+        	pstm1=cn.prepareStatement("select * from  signup where email=?");
+        	pstm2=cn.prepareStatement("select count(*) from passanger where email=?");
+        	pstm3=cn.prepareStatement("select count(*) from signup where email=?");
+        	stmt=cn.createStatement();
+        	
+        	//rs=pstm1.executeQuery();
+        	
+        }
+        catch(SQLException e1) {
+        	System.out.println(e1);
+        }
+        
+          
+           //img=Toolkit.getDefaultToolkit().getImage("rai.jpg");
+        
+           
+          im=new JLabel("");
+          img=new ImageIcon(this.getClass().getResource("/ic.jpg")).getImage();
+          im.setIcon(new ImageIcon(img));
+          
+          
+        
+        l1=new JLabel("New Here. Create New Accout."); f=new Font("ARIAL",Font.BOLD,18);
+        l2=new JLabel("Alraedy Have Account. Log in Here."); l1.setFont(f); l2.setFont(f);
+        l3=new JLabel("First Name::");
+        l4=new JLabel("Last Name::");
+        l5=new JLabel("Email::");
+        l6=new JLabel("Mob No.::");
+        l7=new JLabel("New Password::");
+        l8=new JLabel("Confirm Password::");
+        l9=new JLabel("Gender::"); 
+    	l10=new JLabel("Birth Date::");
+    	l11=new JLabel("Email Id::");
+    	l12=new JLabel("Password::");
+    	
+    	t1=new JTextField(30);
+    	t2=new JTextField(30);
+    	t3=new JTextField(30);
+    	t4=new JTextField(30);
+    	t5=new JTextField(30);
+    	t6=new JTextField(30);
+    	t7=new JTextField(30);
+    	
+    	p1=new JPasswordField(16);
+    	p2=new JPasswordField(16);
+    	p3=new JPasswordField(16);
+    	
+    	c=new JCheckBox("Show Password");
+    	c1=new JCheckBox("Show Password");
+    	r1=new JRadioButton("Male",true);
+    	r2=new JRadioButton("Female");
+    	
+    	bg=new ButtonGroup();
+    	bg.add(r1); bg.add(r2);
+    	
+    	b1=new JButton("Signup");
+    	img1=new ImageIcon(this.getClass().getResource("/si.png")).getImage();
+        b1.setIcon(new ImageIcon(img1));
+        
+    	b2=new JButton("Log In");
+    	b3=new JButton("Select Date");
+    	
+    	
+    	
+    	b1.addActionListener(this);
+    	b2.addActionListener(this);
+    	r1.addActionListener(this);
+    	r2.addActionListener(this);
+    	c.addActionListener(this);
+    	c1.addActionListener(this);
+    	b3.addActionListener(this);
+    	
+    	im.setBounds(0,-200,1640,1070);
+    	
+        l1.setBounds(220,30,400,30); l2.setBounds(800,30,400,30);
+    	l3.setBounds(250,60,250,30); l11.setBounds(800,80,250,30);
+    	t1.setBounds(250,85,250,30); t6.setBounds(800,110,250,30);
+    	l4.setBounds(250,115,250,30); l12.setBounds(800,150,250,30);
+    	t2.setBounds(250,140,250,30); p3.setBounds(800,180,250,30);
+    	l5.setBounds(250,170,250,30); b2.setBounds(850,225,100,30);
+    	t3.setBounds(250,195,250,30); c1.setBounds(1050,180,140,30);
+    	l6.setBounds(250,225,250,30);
+    	t4.setBounds(250,250,250,30);
+    	l7.setBounds(250,280,250,30);
+    	p1.setBounds(250,305,250,30); c.setBounds(500,305,140,30);
+    	l8.setBounds(250,335,250,30);
+    	p2.setBounds(250,360,250,30);
+    	l9.setBounds(250,390,250,30);
+    	r1.setBounds(250,415,100,30);
+    	r2.setBounds(375,415,100,30);
+    	l10.setBounds(250,445,250,30);
+    	t5.setBounds(250,470,250,30); b3.setBounds(500,470,120,30);
+    	b1.setBounds(300,515,120,30);
+    
+        add(l1); add(l2); add(l3); add(t1); add(l4); add(t2); add(l5); add(t3); 
+        add(l6); add(t4); add(l7); add(p1); add(l8); add(p2); add(l9); add(r1);
+        add(r2); add(l10); add(t5); add(l11); add(t6); add(l12); add(p3);
+        add(b1); add(b2); add(c); add(c1); add(b3); add(im);
+    	
+    	setVisible(true);
+    	
+     }
+     
+     static boolean isValid(String email) {
+         String regex = "^[\\w-_\\.+]*[\\w-_\\.]\\@([\\w]+\\.)+[\\w]+[\\w]$";
+         return email.matches(regex);
+      }
+    
+	@Override
+	public void actionPerformed(ActionEvent ae) {
+		// TODO Auto-generated method stub
+		if(c.isSelected()) {
+			p1.setEchoChar((char)0);
+		}
+		else {
+			p1.setEchoChar('*');
+		}
+		
+		if(c1.isSelected()) {
+			p3.setEchoChar((char)0);
+		}
+		else {
+			p3.setEchoChar('*');
+		}
+		
+		if(ae.getSource()==b3) {
+			DatePicker dp=new DatePicker(this);
+		
+			
+			  t5.setText(dp.setPickedDate());
+				
+		}
+		
+		if(ae.getSource()==b1) {
+			try {
+			
+			s1=t1.getText().toString();
+			s2=t2.getText().toString();
+			s3=t3.getText().toString();
+			pstm3.setString(1,s3);
+			rs2=pstm3.executeQuery();
+			if(rs2.next()) {
+				cnt1=rs2.getInt(1);
+			}
+			if(cnt1==1) {
+				JOptionPane.showMessageDialog(this,"Email Id already exists. Please use another email id.");
+				t3.setText("");
+			}
+			
+			boolean tr=isValid(s3);
+			if(tr!=true) {
+                 JOptionPane.showMessageDialog(this,"Wrong structured email id");
+                 t3.setText("");
+                 
+			}
+			
+			pstm.setString(1,s1);
+			pstm.setString(2,s2);
+			pstm.setString(3,s3);
+			
+			
+			
+			s4=t4.getText().toString();
+			mob=Long.parseLong(s4);
+			pstm.setLong(4,mob);
+			
+		
+			if(p1.getText().equals(p2.getText())) {
+				pas=String.valueOf(p1.getPassword());
+				
+			
+				pstm.setString(5,pas);
+				
+				
+			}
+			else {
+				JOptionPane.showMessageDialog(this,"Password Didn't Matched");
+				p1.setText("");
+				p2.setText("");
+			}
+			
+			if(r1.isSelected()) {
+				s6=r1.getText().toString();
+				pstm.setString(6,s6);
+			}
+			else if(r2.isSelected()) {
+				s6=r2.getText().toString();
+				pstm.setString(6,s6);
+			}
+			
+			s7=t5.getText().toString();
+			pstm.setString(7,s7);
+			
+			if(t3.getText().isEmpty()!=true) {
+			up=pstm.executeUpdate();
+			if(up>0) {
+				JOptionPane.showMessageDialog(this,"Signup Succesfully");
+				t1.setText("");
+				t2.setText("");
+				t3.setText("");
+				t4.setText("");
+				t5.setText("");
+				p1.setText("");
+				p2.setText("");
+			}
+			}
+			else {
+				JOptionPane.showMessageDialog(this,"Signup Unsuccesfully");
+			}
+		  }
+		
+		
+		catch(SQLException e2) {
+			System.out.println(e2);
+		}
+	  }
+	  if(ae.getSource()==b2) {
+		  try {
+			  
+			  String pas1=String.valueOf(p3.getPassword());
+			  String mail=t6.getText().toString();
+			  
+			  
+			  pstm1.setString(1,t6.getText());
+			  rs=pstm1.executeQuery();
+			  pstm2.setString(1,mail);
+			  rs1=pstm2.executeQuery();
+			  if(rs1.next()) {
+				  cnt=rs1.getInt(1);
+			  }
+			 while(rs.next()) {
+				  if(rs.getString(3).equals(t6.getText()) && rs.getString(5).equals(pas1)) {
+					  JOptionPane.showMessageDialog(this,"Log in Successfull");
+					  p3.setText("");
+                      
+					  //while(rs1.next()) {
+						  if(cnt==1) {
+							  Home se=new Home("Train Resesrvation",mail);
+							  se.setVisible(true);
+							  this.dispose();
+						      break;
+						  
+						  }
+						  else {
+							  Passanger ps=new Passanger("Train Reservation",mail);
+							  ps.setVisible(true);
+							  this.dispose();
+							  break;
+							  
+						  }
+						
+					  //}
+				  }
+				  else {
+					  JOptionPane.showMessageDialog(this,"Email or password didn't match.");
+					  break;
+				  }
+			  }
+			  		 
+			  
+		  }
+		  catch(SQLException e3) {
+			  System.out.println(e3);
+		  }
+	  }
+		
+	}
+	public static void main(String[] ar) {
+		new  Signup("Train Reservation");
+	}
+     
+}
+

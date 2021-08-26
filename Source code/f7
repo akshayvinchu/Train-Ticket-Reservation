@@ -1,0 +1,200 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.sql.*;
+public class Available extends JFrame implements MouseListener,ActionListener{
+	
+	Connection cn;
+	PreparedStatement pt;
+	ResultSet rs;
+	Image img;
+	String trno,tnm,src,des,ar,dep,dnm,mail,tr;
+	int cnt=0,i;
+	JLabel l1,l2,l3,l4,l5,l6,l7[],im;
+	JButton b1,b2,b3,b4,b5,b6;
+	String s1,s2,s3,s4,s5,s6,s7[];
+	Font f;
+	
+	Available(String t, String dnm,String src,String des,String mail){
+		super(t);
+		setLayout(null);
+		 setSize(740,550);
+	        setLocation(320,120);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        im=new JLabel("");
+        img=new ImageIcon(this.getClass().getResource("/bak.jpg")).getImage();
+        im.setIcon(new ImageIcon(img));
+    
+        this.dnm=dnm;
+        this.src=src;
+        this.des=des;
+        this.mail=mail;
+        l3=new JLabel("A");
+        l3.setBounds(0,60,500,30);
+        l3.setText(src+des+dnm);
+        b1=new JButton("Go Back");
+       
+        try {
+        	cn=DriverManager.getConnection("jdbc:postgresql://127.0.0.1/mydb","akshay","akshay");
+        	pt=cn.prepareStatement("select * from  train where src=? and dest=? and day=?;");
+        	
+        pt.setString(1,src);
+        pt.setString(2,des);
+        
+        if(dnm.equals("Monday")) {
+			
+		    pt.setString(3,"mo");
+		}
+		if(dnm.equals("Tuesday")) {
+			
+			pt.setString(3,"tu");
+		}
+		if(dnm.equals("Wednesday")) {
+			
+			pt.setString(3,"we");
+		}
+		if(dnm.equals("Thursday")) {
+			
+			pt.setString(3,"th");
+		}
+		if(dnm.equals("Friday")) {
+			
+			pt.setString(3,"fr");
+		}
+		if(dnm.equals("Saturday")) {
+			
+			pt.setString(3,"sa");
+		}
+		if(dnm.equals("Sunday")){
+			
+			pt.setString(3,"sn");
+		} 
+         
+		rs=pt.executeQuery();
+	
+		
+			
+		   int bd=30;
+		    while(rs.next()){
+		    	
+		    	   s1=rs.getString(1);
+		    	   s2=rs.getString(2);
+		    	   s3=rs.getString(3);
+		    	   s4=rs.getString(4);
+		    	   s5=rs.getString(5);
+		    	   s6=rs.getString(6);
+                   
+		    	    l2=new JLabel("");
+				    l2.setBounds(0,bd,730,30);
+				    l2.setText("| "+s1+"          | "+s2+"      | "+s3+"           | "+s4+
+				    		"                | "+s5+"                 | "+s6+"|");
+				      l2.setForeground(Color.yellow);
+				     this.add(l2);
+			     	
+		    	   l2.addMouseListener(new MouseAdapter() {
+		    		   public void mouseClicked(MouseEvent e) {
+		    			   Rseat rt=new Rseat("Available Seat",mail,s1);
+		    			   rt.setVisible(true);
+		    			 
+		    			   
+		    		   }
+		    		  
+		    		   
+		    	   });
+				   /* l7[i]=new JLabel("");
+				    l7[i].setBounds(0,bd+=30,730,30);
+				    l7[i].setText("| "+rs.getString(1)+
+						"          | "+rs.getString(2)+
+						"      | "+rs.getString(3)+
+						"           | "+rs.getString(4)+
+						"                | "+rs.getString(5)+
+						"                 | "+rs.getString(6)+"|");
+				      l7[i].setForeground(Color.yellow);
+				     this.add(l7[i]);*/
+		    	   bd+=30;
+			     	 
+                   
+		    	
+		    	
+				}
+		    
+		
+        
+		f=new Font("Arial",Font.BOLD,14);
+		
+        l1=new JLabel("| Train No. |      Train Name      |     Source     |   Destination   | ArriavalTime | DepartureTime |"); 
+        l1.setForeground(Color.red);
+        l1.setFont(f);
+      
+        l1.setBounds(0,0,730,30);
+        b1.setBounds(330,490,150,30);
+        im.setBounds(0,0,730,550);
+    
+        b1.addActionListener(this);
+        add(l1);
+        add(b1);
+   //     add(l3);
+        add(im);
+        }
+        catch(SQLException e1) {
+        	System.out.println(e1);
+        }
+        
+       // setVisible(true);
+	}
+
+	
+	
+	
+	
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource()==b1) {
+			Selection se=new Selection("Train Reservation",mail);
+			se.setVisible(true);
+		}
+	}
+	public static void main(String[] arg) {
+		new Available("Available Trains",null,null,null,null);
+	}
+
+
+
+
+
+
+	
+
+}
+

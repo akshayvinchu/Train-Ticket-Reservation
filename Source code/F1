@@ -1,0 +1,79 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+public class First extends JFrame implements ActionListener{
+
+	JLabel l1,l2,l3,im,im1;
+	JButton ln,sn;
+	ImageIcon in;
+	Font f;
+	Image img,img1;
+	First(String title){
+		super(title);
+		setLayout(null);
+        setSize(700,485);
+        setLocation(320,120);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        in=new ImageIcon("/si.png");
+        this.setIconImage(in.getImage());
+        
+        im=new JLabel("");
+        img=new ImageIcon(this.getClass().getResource("/tr1.jpg")).getImage();
+        im.setIcon(new ImageIcon(img));
+        
+        im1=new JLabel("");
+        img1=new ImageIcon(this.getClass().getResource("/railway.png")).getImage();
+        im1.setIcon(new ImageIcon(img1));
+        
+        l1=new JLabel("Welcome To Train Ticket Reservation");
+        f=new Font("ARIAL",Font.BOLD,20);
+        l1.setFont(f);
+        l1.setForeground(Color.DARK_GRAY);
+        
+        l2=new JLabel("New Here. Click below to signup.");
+        l3=new JLabel("Already Have account. Click below to Login");
+        
+        ln=new JButton("Login");
+        sn=new JButton("SignUp");
+        
+        ln.addActionListener(this);
+        sn.addActionListener(this);
+        
+        l1.setBounds(130,5,600,30);
+        l2.setBounds(380,370,400,30); l2.setForeground(Color.black);
+        l3.setBounds(380,50,400,30); 
+        im.setBounds(0,-50,700,550);
+        im1.setBounds(225,50,256,256);
+        
+        sn.setBounds(470,420,120,30); sn.setBackground(Color.orange);
+        ln.setBounds(470,90,120,30); ln.setBackground(Color.orange);
+        
+        add(l1); add(l2); add(l3); add(sn); add(ln);
+       // add(im1);
+        add(im);
+        
+        setVisible(true);
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource()==sn) {
+			Signup sn=new Signup("Train Reservation");
+			sn.setVisible(true);
+			this.dispose();
+		}
+		if(e.getSource()==ln) {
+			Login lo=new Login("Login");
+			lo.setVisible(true);
+			this.dispose();
+		}
+		
+	}
+	public static void main(String[] args) {
+		new First("Train Ticket Reservation");
+	}
+	
+
+}
+

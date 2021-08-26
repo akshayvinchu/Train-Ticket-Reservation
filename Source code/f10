@@ -1,0 +1,149 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.sql.*;
+public class Cancel extends JFrame implements ActionListener {
+      
+	   String mail,s1,s2,s3;
+       JLabel im,l1,l2,lk;
+       Image img;
+       Connection cn;
+       PreparedStatement pstm,pstm1,pstm2,pstm3;
+       Statement stmt;
+       ResultSet rs,rs1,rs2;
+       Font f;
+       long l,lo;
+       JButton b,b1;
+       
+	   Cancel(String tit,String mail){
+		super(tit);
+		setLayout(null);
+        setSize(700,550);
+        setLocation(320,120);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.mail=mail;
+        try {
+        	cn=DriverManager.getConnection("jdbc:postgresql://127.0.0.1/mydb","akshay","akshay");
+        	pstm=cn.prepareStatement("Select * from passanger where email=?");
+        	pstm1=cn.prepareStatement("select * from ticket where pid=?");
+        	pstm2=cn.prepareStatement("delete from ticket where tickno=?");
+        }
+        catch(SQLException sq){
+        	System.out.println(sq);
+        }
+        im=new JLabel("");
+        img=new ImageIcon(this.getClass().getResource("/bak.jpg")).getImage();
+        im.setIcon(new ImageIcon(img));
+        
+        b1=new JButton("");
+        
+        l1=new JLabel("Select ticket no. you want to cancel"); f=new Font("ARIAL",Font.BOLD,18);
+        l1.setFont(f);
+        l1.setForeground(Color.white);
+        
+        
+        
+        l1.setBounds(150,30,400,30); 
+        im.setBounds(0,0,700,550);
+        try {
+        	pstm.setString(1,mail);
+        	System.out.println("Ma="+mail);
+            rs=pstm.executeQuery();
+            if(rs.next()) {
+            	l=rs.getLong(11);
+            	System.out.println("Pid="+l);
+            	pstm1.setLong(1,l);
+            }
+            rs1=pstm1.executeQuery();
+            int bd=60;
+            while(rs1.next()) {
+            	s2=Long.toString(rs1.getLong(3));
+            	
+             	l2=new JLabel("");
+            	l2.setBounds(300,bd,300,30);
+            	l2.setText(s2);
+            	l2.setForeground(Color.yellow);
+            	this.add(l2);
+            	 l2.addMouseListener(new MouseAdapter() {
+		    		   public void mouseClicked(MouseEvent e) {
+		    			   try {
+		    			   System.out.println("Mouse clicked");
+		    			   
+		    			  s3=l2.getText();  
+		    			  lo=Long.parseLong(s3);
+		    			  System.out.println("Long"+lo);
+		    			  
+		    			 
+		    				 pstm2.setLong(1,lo);
+							 int p=pstm2.executeUpdate();
+			    			 if(p>0) {
+			    				 JOptionPane.showMessageDialog(null,"Ticket cancelled","Cancellation", p);
+			    				 First ft=new First("Train Reservation");
+			    				 ft.setVisible(true);
+			    				 
+			    			 }
+			    			 else {
+			    				 System.out.println("XCannot cancel");
+			    			 }
+						} catch (SQLException e1) {
+							// TODO Auto-generated catch block
+							e1.printStackTrace();
+						}
+		    			
+		    			   
+		    		   }
+		    		  
+		    		   
+		    	   });  
+            	
+     /*       	b=new JButton("");
+            	b.setBounds(300,bd,300,30);
+            	b.setText(s2);
+            	b.setBackground(Color.white);
+            	this.add(b);
+            	b.addActionListener(new ActionListener() {
+            		public void actionPerformed(ActionEvent ae) {
+            			if(ae.getSource()==b) {
+            /*				s3=b.getText(); 
+            				System.out.println("Tik"+s3);
+  		    			  lo=Long.parseLong(s3);
+  		    			 try {
+							pstm2.setLong(1,lo);
+							 int p=pstm2.executeUpdate();
+			    			 if(p>0) {                      */
+			    				 
+			    	//			 First ft=new First("Train Reservation");
+			    		//		 ft.setVisible(true);
+			/*    			 }
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}  
+            			}
+            		}
+            	});    */
+            	 bd+=30;   
+            }
+        }
+        catch(SQLException st){
+        	System.out.println(st);
+        }
+        
+        
+        add(l1);
+        add(b1);
+        add(im);
+        
+        setVisible(true);
+	}
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+	public static void main(String[] arg) {
+		new Cancel("Cancel Ticket",null);
+	}
+
+}
+

@@ -1,0 +1,90 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.sql.*;
+public class Ticket extends JFrame implements ActionListener{
+    	String mail,s1,s2,s3,s4,s5,s6,s7,s8,s9;
+    	 Connection cn;
+	    PreparedStatement ps,ps1;
+	    ResultSet rs,rs1;
+	    JLabel l1,l2,l3,l4,l5,l6,l7,l8,l9; 
+	    int trno,tno,pid,i1,i2,i4,i5;
+        long i3;
+        JButton b;
+	Ticket(String tit,String mail,int tno,int pid){
+		super(tit);
+		setLayout(null);
+		setSize(700,300);
+	    setLocation(320,120);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.mail=mail;
+        this.tno=tno;
+        this.pid=pid;
+        b=new JButton("OK");
+        
+        try {
+        	cn=DriverManager.getConnection("jdbc:postgresql://127.0.0.1/mydb","akshay","akshay");
+        	ps=cn.prepareStatement("select * from ticket where pid=? and trno=?");
+        	ps1=cn.prepareStatement("select * from passanger where email=?");
+        	ps.setInt(1,pid);
+        	ps.setInt(2,tno);
+        	ps1.setString(1,mail);
+        	
+        	rs=ps.executeQuery();
+        	rs1=ps1.executeQuery();
+        	while(rs.next()) {
+        		i1=rs.getInt(1);
+        		i2=rs.getInt(2);
+        		i3=rs.getLong(3);
+        		s4=rs.getString(4);
+        		s5=rs.getString(5);
+        		s6=rs.getString(6);
+        		s7=rs.getString(7);
+        		
+        	}
+        	while(rs1.next()) {
+        	     s8=rs1.getString(1);
+        	     s9=rs1.getString(2);
+        	}
+        }
+        catch(SQLException sq) {
+        	System.out.println(sq);
+        }
+        
+        l1=new JLabel("Pid:"+i1);
+		l2=new JLabel("Train No:"+i2);
+		l3=new JLabel("Ticket no:"+i3);
+		l4=new JLabel("Coach:"+s4);
+		l5=new JLabel("Berth:"+s5);
+		l6=new JLabel("Seat Nos.:"+s6);
+		l7=new JLabel("Status:"+s7);
+		l8=new JLabel("Name:"+s8+" "+s9);
+		b.addActionListener(this);
+		
+		l3.setBounds(30,30,250,30);
+		l2.setBounds(250,30,250,30);
+		l1.setBounds(400,30,250,30);
+		l8.setBounds(30,70,650,30);
+		l4.setBounds(30,110,250,30);
+		l5.setBounds(300,110,250,30);
+		l6.setBounds(500,110,250,30);
+		l7.setBounds(30,150,250,30);
+		b.setBounds(280,220,100,30);
+		
+		add(l3); add(l2); add(l1); add(l8); add(l4); add(l5); add(l6); add(l7); add(b);
+        setVisible(true);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		if(e.getSource()==b) {
+			First ft=new First("Train Reservation");
+			 ft.setVisible(true);
+			 this.dispose();
+		}
+	}
+	public static void main(String[] arg) {
+		new Ticket("Ticket",null,0,0);
+	}
+}
+

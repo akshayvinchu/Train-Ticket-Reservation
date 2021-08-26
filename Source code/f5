@@ -1,0 +1,183 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+
+
+
+import java.sql.*;
+import java.util.*;
+import java.util.Date;
+import java.text.*;
+import java.io.*;
+
+public class Selection extends JFrame implements ActionListener{
+	
+	JLabel im,l1,l2,l3,l4;
+	static JLabel l5;
+	Image img,img1;
+	JTextField t1,t2,t3,t4;
+	JButton se,su,bn[];
+	Font f,f1;
+	String mo,tu,we,th,fr,sa,sn,mail;
+	Date dt,d1,d2;
+	String x1,x2,x3,x4,x5,x6,dnm;
+	JPanel pn;
+	JComboBox<String> bx1,bx2;
+     Connection cn;
+     PreparedStatement p1,p2;
+     ResultSet rs;
+     
+	Selection(String tit,String mail){
+		super(tit);
+		setLayout(null);
+        setSize(1650,1080);
+        setLocation(0,0);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+     
+        this.mail=mail;
+        im=new JLabel("");
+        img=new ImageIcon(this.getClass().getResource("/ic.jpg")).getImage();
+        im.setIcon(new ImageIcon(img));
+        
+        dt=new Date();
+        
+        
+       
+        l1=new JLabel("Select Source and Destination of your journey.");
+        l2=new JLabel("Source:");  f=new Font("ARIAL",Font.BOLD,18);
+        l3=new JLabel("Destination:"); l1.setFont(f); 
+        l4=new JLabel("Select Date:"); 
+        l5=new JLabel("Day");
+        
+        f1=new Font("ARIAL",Font.BOLD,16);
+        l2.setFont(f1); l3.setFont(f1); l4.setFont(f1);
+        String sp[]= {"Select","Mumbai","Pune"};
+        
+        bx1=new JComboBox<>(sp);
+        bx2=new JComboBox<>(sp);
+        
+        t1=new JTextField(30);
+        t2=new JTextField(30);
+        t3=new JTextField(30);
+        se=new JButton("DATE");
+        su=new JButton("Search");
+        
+        se.addActionListener(this);
+        su.addActionListener(this);
+        
+        
+        im.setBounds(0,-130,1640,1070);
+        l1.setBounds(425,30,500,30);
+        l2.setBounds(200,150,100,30); bx1.setBounds(290,150,250,30);
+        l3.setBounds(720,150,250,30); bx2.setBounds(880,150,250,30);
+        l4.setBounds(530,250,250,30); t3.setBounds(530,290,250,30);
+        se.setBounds(780,290,100,30);
+        su.setBounds(600,400,100,30); l5.setBounds(0,0,700,30);
+        
+        add(l1); add(l2); add(bx1); add(l3); add(bx2); add(l4);
+        add(t3); add(se);  add(su);
+        add(im); 
+        
+        setVisible(true);
+	}
+	
+	@Override
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		if(e.getSource()==se) {
+			
+			DatePick dp=new DatePick(this);
+			t3.setText(dp.setPickedDate());
+			String da=t3.getText();
+			
+			int d=Integer.parseInt(da.substring(0,2));
+			int m=Integer.parseInt(da.substring(3,5));
+			int y=Integer.parseInt(da.substring(6));
+			String day=String.format("%d-%d-%d",d,m,y);
+		//	String dnm;
+			try {
+			dt=new SimpleDateFormat("d-M-yyyy").parse(day);
+			
+			
+				
+			}
+			catch (ParseException pa) {
+				pa.printStackTrace();
+			}
+			dnm=new SimpleDateFormat("EEEE", Locale.ENGLISH).format(dt);
+		/*	if(dnm.equals("Monday")) {
+				
+			    p1.setString(1,"mo");
+			}
+			if(dnm.equals("Tuesday")) {
+				
+				p1.setString(1,"tu");
+			}
+			if(dnm.equals("Wednesday")) {
+				
+				p1.setString(1,"we");
+			}
+			if(dnm.equals("Thursday")) {
+				//th="Thursday";
+				p1.setString(1,"th");
+			}
+			if(dnm.equals("Friday")) {
+				//fr="Friday";
+				p1.setString(1,"fr");
+			}
+			if(dnm.equals("Saturday")) {
+				//sa="Saturday";
+				p1.setString(1,"sa");
+			}
+			if(dnm.equals("Sunday")){
+				//sn="Sunday";
+				p1.setString(1,"sn");
+			}
+			l5.setText(dnm);
+			*/
+			
+			
+		}
+		
+		if(e.getSource()==su) {
+			
+			String stp=t3.getText();
+			try {
+				d2=new SimpleDateFormat("dd-MM-yyyy").parse(stp);
+			} catch (ParseException e1) {
+				// TODO Auto-generated catch block
+				e1.printStackTrace();
+			}
+			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy"); 
+			 d1=new Date();
+			if(d2.before(d1)) {
+				JOptionPane.showMessageDialog(this,"Please choose date after todays date");
+			}
+			
+			
+			
+			    if("Select".equals(bx1.getSelectedItem()) || "Select".equals(bx2.getSelectedItem())) {
+			    	JOptionPane.showMessageDialog(this,"Please Select right source and destination");
+			    	this.setVisible(true);
+			    }
+			    else if(bx1.getSelectedItem().equals(bx2.getSelectedItem())) {
+			    	JOptionPane.showMessageDialog(this,"Source and Destination can not be same");
+			    }
+			    
+			    else {
+				String s1=bx1.getSelectedItem().toString();
+				String s2=bx2.getSelectedItem().toString();
+						Available av=new Available("Available Train",dnm,s1,s2,mail);
+						av.setVisible(true);
+						this.setVisible(false);
+			    }
+			}	
+	
+		
+	}
+	public static void main(String[] arg) {
+		new Selection("Train Reservation",null);
+	}
+	
+}
+

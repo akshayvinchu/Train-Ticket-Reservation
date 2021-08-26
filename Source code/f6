@@ -1,0 +1,192 @@
+import java.awt.*;
+import java.awt.event.*;
+import javax.swing.*;
+import java.sql.*;
+import java.util.*;
+import java.util.Date;
+public class Rseat extends JFrame implements ActionListener{
+	
+	JCheckBox cb[];
+	JLabel l1,l2;
+	Font f;
+	JComboBox<String> se,co;
+	JButton b1,b2;
+    Connection cn;
+    PreparedStatement ps,ps1,ps2,ps3,ps4,ps5,ps6;
+    ResultSet rs,rs1,rs2,rs3,rs4;
+    String st,mail,tr,c;
+    int a,pid,tno,no1[],p,q,r,h,j,k,l;
+    String str1,x,y,z,seat;
+    Date dt;
+    
+	Rseat(String tit,String mail,String tr){
+		super(tit);
+		setLayout(null);
+		setSize(700,550);
+	    setLocation(320,120);
+        setDefaultCloseOperation(EXIT_ON_CLOSE);
+        this.mail=mail;
+        this.tr=tr;
+        this.seat=seat;
+        try {
+        	cn=DriverManager.getConnection("jdbc:postgresql://127.0.0.1/mydb","akshay","akshay");
+        	ps=cn.prepareStatement("select * from seat where booked IS NULL");
+        	ps1=cn.prepareStatement("update seat set booked=? where sno=?");
+        	ps2=cn.prepareStatement("insert into ticket values(?,?,?,?,?,?,?)");
+        	ps3=cn.prepareStatement("select * from passanger where email=?");
+        	ps4=cn.prepareStatement("select * from train where trno=?");
+        	ps5=cn.prepareStatement("select * from seat where booked=true");
+        	ps6=cn.prepareStatement("select * from seat1");
+        	
+        }
+        catch(SQLException sq) {
+        	System.out.println(sq);
+        }
+        l1=new JLabel("Select how many Seats you want to Reserve.");
+        f=new Font("Arial",Font.BOLD,20); l1.setFont(f);
+        l2=new JLabel("A");
+        
+       
+        
+        String coch[]= {"Select Coach","General","AC","Sleeper"};
+        co=new JComboBox<>(coch);
+        String set1[]= {"Select Berth","A1","A2","A3","A4","A5"};
+        String set2[]= {"Select Berth","S1","S2","S3","S4","S5","S6","S7"};
+        String set3[]= {"Select Berth","G1","G2","G3","G4","G5","G6","G7","G8","G9","G10"};
+        co.setBounds(230,80,250,30);
+        add(co);
+       co.addActionListener(new ActionListener() {
+        	
+        
+      	public void actionPerformed(ActionEvent ae) {
+     // 		try {
+      		if(ae.getSource()==co) {
+       		x=co.getSelectedItem().toString();
+       		
+            if("General".equals(x)) {
+            	
+            	 se=new JComboBox<>(set3);
+            	 se.setBounds(230,150,250,30);
+            	 se.addActionListener(this);
+            	 add(se);
+            	 
+            }
+            else if("AC".equals(x)) {
+            
+            	 se=new JComboBox<>(set1);
+            	 se.setBounds(230,150,250,30);
+            	 se.addActionListener(this);
+            	 add(se);
+            	 
+            }
+            else if("Sleeper".equals(x)) {
+            	
+            	 se=new JComboBox<>(set2);
+            	 se.setBounds(230,150,250,30);
+            	 se.addActionListener(this);
+            	 add(se);
+            }
+        	}
+      	//	}
+      //		catch(SQLException sp) {
+      	//		System.out.println(sp);
+      	//	}
+      	}
+        });
+        
+       
+        
+        b1=new JButton("Submit");
+        b2=new JButton("Select Seats");
+        
+        l1.setBounds(80,30,600,30);  
+        
+        b2.setBounds(260,200,200,30); b1.setBounds(300,270,100,30);
+        l2.setBounds(80,250,400,30);
+       // se.addActionListener(this);
+        co.addActionListener(this);
+        b1.addActionListener(this);
+        b2.addActionListener(this);
+        
+        add(l1); add(b2);  add(b1); //add(l2);
+        
+         setVisible(true);
+	}
+	
+	
+	
+	
+	
+	public void actionPerformed(ActionEvent e) {
+		// TODO Auto-generated method stub
+		try {
+			if(e.getSource()==se) {
+				
+			}
+			
+			if(e.getSource()==b2) {
+				Seats ss=new Seats("Select Seats");
+	        	 ss.setVisible(true);
+			}
+         if(e.getSource()==b1) {
+        	 	 
+        	
+			ps3.setString(1,mail);
+		    
+			rs=ps3.executeQuery();
+		
+			
+			while(rs.next()) {
+				 a=rs.getInt(11);
+				 
+				// st=Integer.toString(a);
+				 break;
+			}
+			ps2.setInt(1,a);
+			q=Integer.parseInt(tr);
+		    ps2.setInt(2,q);		
+		    Random ran=new Random();
+			int no=ran.nextInt(99999);
+			ps2.setInt(3,no);
+					
+			   
+					
+			ps2.setString(4,x);        
+		 
+         y=se.getSelectedItem().toString();
+      //   l2.setText(y);
+         ps2.setString(5,y);
+         rs4=ps6.executeQuery();
+         while(rs4.next()) {
+        	 z=rs4.getString(1);
+         }
+         ps2.setString(6,z);
+				
+		ps2.setString(7,"Confirm");
+		
+		
+
+		r=ps2.executeUpdate();
+		if(r>0) {
+		
+			JOptionPane.showMessageDialog(this,"Generating Ticket");
+		Ticket tk=new Ticket("Ticket",mail,q,a);
+		tk.setVisible(true);
+		this.dispose();
+		}
+         }
+       }
+			catch(SQLException xc) {
+				System.out.println(xc);
+			}
+			
+		
+	}
+	public static void main(String[] arg) {
+		new Rseat("Available Seat",null,null);
+	}
+	
+	
+	
+}
+
